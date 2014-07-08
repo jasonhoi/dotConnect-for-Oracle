@@ -2,21 +2,27 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Devart.Data.Oracle;
+using System.Data.Entity.Infrastructure;
 
 class Program
 {
     static void Main(string[] args)
     {
+        // Original tutorial: http://blog.devart.com/entity-framework-code-first-support-for-oracle-mysql-postgresql-and-sqlite.html
+
         //--------------------------------------------------------------
         // You use the capability for configuring the behavior of the EF-provider:
+        /*
         Devart.Data.Oracle.Entity.Configuration.OracleEntityProviderConfig config =
             Devart.Data.Oracle.Entity.Configuration.OracleEntityProviderConfig.Instance;
 
         config.Workarounds.IgnoreSchemaName = true;
+         * */
         //--------------------------------------------------------------
 
         /*--------------------------------------------------------------
@@ -51,28 +57,18 @@ class Program
         database tables can be deleted/added, and filled with source data.
         ---------------------------------------------------------------*/
 
+        Console.WriteLine("Available account currencies in database:");
         using (MyDbContext context = new MyDbContext())
         {
-            var query = context.Products.Include("Category")
-                           .Where(p => p.Price > 20.0)
-                           .ToList();
+            var list = (from d in context.AccountCurrencies
+                        select d).ToList();
 
-            foreach (var product in query)
-                Console.WriteLine("{0,-10} | {1,-50} | {2}",
-                  product.ProductID, product.ProductName, product.Category.CategoryName);
-
-            Console.ReadKey();
+            foreach (var l in list)
+            {
+                Console.WriteLine(l.IsoCode);
+            }
         }
-    }
 
-    // On connection opening, we change the current schema to "TEST":
-    static void Connection_StateChange(object sender, StateChangeEventArgs e)
-    {
-
-        if (e.CurrentState == ConnectionState.Open)
-        {
-            DbConnection connection = (DbConnection)sender;
-            connection.ChangeDatabase("TEST");
-        }
+        Console.ReadKey();
     }
 }

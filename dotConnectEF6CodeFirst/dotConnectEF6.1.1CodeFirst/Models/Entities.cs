@@ -6,41 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-//[Table("Product", Schema = "TEST")]
-public class Product
-{
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public long ProductID { get; set; }
-
-    [Required]
-    [MaxLength(50)]
-    public string ProductName { get; set; }
-
-    public string UnitName { get; set; }
-    public int UnitScale { get; set; }
-    public long InStock { get; set; }
-    public double Price { get; set; }
-    public double DiscontinuedPrice { get; set; }
-
-    public virtual ProductCategory Category { get; set; }
-}
-
-//[Table("ProductCategory", Schema = "TEST")]
-public class ProductCategory
-{
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public long CategoryID { get; set; }
-
-    [Required]
-    [MaxLength(50)]
-    public string CategoryName { get; set; }
-
-    public virtual ProductCategory ParentCategory { get; set; }
-    public virtual ICollection<Product> Products { get; set; }
-}
-
 
 //[Table("AccountCurrencies")], all types of account only can use these supported currencies, ex. HKD, MOP, USD, EUR, AUD
 public class AccountCurrency
@@ -94,10 +59,19 @@ public class CashAccount
     public int Id { get; set; }
 
     [Required]
+    public virtual ClientUser Client { get; set; }
+
+    [Required]
+    public virtual AccountCurrency Currency { get; set; }
+
+    [Required]
     public decimal Balance { get; set; }
 
-    public virtual ClientUser Client { get; set; }
-    public virtual AccountCurrency Currency { get; set; }
+    [Required]
+    public DateTime CreatedAt { get; set; }
+
+    [Required]
+    public DateTime UpdatedAt { get; set; }
 
     public virtual ICollection<Transaction> Transactions { get; set; }
 }
@@ -109,6 +83,7 @@ public class Transaction
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
+    [Required]
     public virtual CashAccount CashAccount { get; set; }
 
     [Required]
@@ -124,5 +99,43 @@ public class Transaction
     [StringLength(500)]
     public string Description { get; set; }
 
-    public DateTime CreateAt { get; set; }
+    [Required]
+    public DateTime CreatedAt { get; set; }
 }
+
+/*
+//[Table("Product", Schema = "TEST")]
+public class Product
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public long ProductID { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string ProductName { get; set; }
+
+    public string UnitName { get; set; }
+    public int UnitScale { get; set; }
+    public long InStock { get; set; }
+    public double Price { get; set; }
+    public double DiscontinuedPrice { get; set; }
+
+    public virtual ProductCategory Category { get; set; }
+}
+
+//[Table("ProductCategory", Schema = "TEST")]
+public class ProductCategory
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public long CategoryID { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string CategoryName { get; set; }
+
+    public virtual ProductCategory ParentCategory { get; set; }
+    public virtual ICollection<Product> Products { get; set; }
+}
+*/

@@ -8,8 +8,8 @@ using System.Data.Common;
 public class MyDbContext : DbContext
 {
 
-    public DbSet<Product> Products { get; set; }
-    public DbSet<ProductCategory> ProductCategories { get; set; }
+    //public DbSet<Product> Products { get; set; }
+    //public DbSet<ProductCategory> ProductCategories { get; set; }
     public DbSet<AccountCurrency> AccountCurrencies { get; set; }
     public DbSet<CashAccount> CashAccounts { get; set; }
     public DbSet<ClientUser> ClientUsers { get; set; }
@@ -97,6 +97,61 @@ public static class MyDbContextSeeder
 {
     public static void Seed(MyDbContext context)
     {
+        // Seed supported currencies
+        context.AccountCurrencies.Add(new AccountCurrency
+        {
+            IsoCode = "HKD"
+        });
+        context.AccountCurrencies.Add(new AccountCurrency
+        {
+            IsoCode = "MOP"
+        });
+        context.AccountCurrencies.Add(new AccountCurrency
+        {
+            IsoCode = "USD"
+        });
+        context.AccountCurrencies.Add(new AccountCurrency
+        {
+            IsoCode = "AUD"
+        });
+        context.AccountCurrencies.Add(new AccountCurrency
+        {
+            IsoCode = "EUR"
+        });
+
+        // Seed a client user
+        context.ClientUsers.Add(new ClientUser
+        {
+            ClientId = "trader-1",
+            Username = "jason",
+            PasswordHash = "##jason",
+            Email = "flashjx1985@gmail.com",
+            Mobile = "+00853 63018968",
+            CreatedAt = DateTime.Now
+        });
+
+        // Seed a cash account for a client user
+        context.CashAccounts.Add(new CashAccount
+        {
+            Client = context.ClientUsers.Local.Single(x => x.Username == "jason"),
+            Currency = context.AccountCurrencies.Local.Single(x => x.IsoCode == "MOP"),
+            Balance = 100m,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        });
+
+        // Seed a transaction for a cash account
+        context.Transactions.Add(new Transaction
+        {
+            Dr = 100,
+            Cr = 0,
+            Balance = 100,
+            Description = "Deposit 100 " + context.CashAccounts.Local.Single(x => x.Client.Username == "jason").Currency.IsoCode,
+            CreatedAt = DateTime.Now,
+            CashAccount = context.CashAccounts.Local.Single(x => x.Client.Username == "jason")
+        });
+
+        /*
         context.ProductCategories.Add(new ProductCategory()
         {
             CategoryName = "prose"
@@ -145,5 +200,6 @@ public static class MyDbContextSeeder
             Category =
               context.ProductCategories.Local.Single(p => p.CategoryName == "poem")
         });
+        */
     }
 }
