@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Context\MyDbContext.cs" />
-    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Entities.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
