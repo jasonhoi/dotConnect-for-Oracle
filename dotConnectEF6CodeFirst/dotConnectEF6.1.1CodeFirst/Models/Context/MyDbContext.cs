@@ -119,14 +119,16 @@ public static class MyDbContextSeeder
             IsoCode = "EUR"
         });
 
+        context.SaveChanges();
+
         // Seed a client user
         context.ClientUsers.Add(new ClientUser
         {
             ClientId = "trader-1",
             Username = "jason",
             PasswordHash = "##jason",
-            Email = "flashjx1985@gmail.com",
-            Mobile = "+00853 63018968",
+            Email = "abc@gmail.com",
+            Mobile = "+00853 6666 6666",
             CreatedAt = DateTime.Now
         });
 
